@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Admin Dashboard - BreathSafe</title>
+    
+    <!-- CSS Files (IN CORRECT ORDER) -->
+    <link rel="stylesheet" href="admin-dashboard-core.css">
+    <link rel="stylesheet" href="admin-dashboard-header.css">
+    <link rel="stylesheet" href="admin-dashboard-widgets.css">
+    <link rel="stylesheet" href="admin-dashboard-tables.css">
+    <link rel="stylesheet" href="admin-dashboard-modals.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="light">
+    
+    <!-- ========== HEADER ========== -->
+    <header class="header">
+        <div class="header-container">
+            <!-- Logo Left -->
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-wind"></i>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-title">BreathSafe</span>
+                    <span class="logo-subtitle">Admin Panel</span>
+                </div>
+            </div>
+
+            <!-- User Menu Right -->
+            <div class="header-right">
+                <div class="user-menu" id="userMenu">
+                    <div class="user-menu-trigger">
+                        <div class="user-avatar-header">
+                            <div class="avatar-circle" id="headerAvatar">
+                                <span id="headerAvatarText">AD</span>
+                            </div>
+                            <span class="admin-badge-header">
+                                <i class="fas fa-shield-alt"></i>
+                            </span>
+                        </div>
+                        <div class="user-info">
+                            <span class="user-name" id="headerUsername">Admin User</span>
+                            <span class="user-role">
+                                <i class="fas fa-shield-alt"></i>
+                                Administrator
+                            </span>
+                        </div>
+                        <i class="fas fa-chevron-down dropdown-arrow"></i>
+                    </div>
+
+                    <!-- Dropdown -->
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="dropdown-header">
+                            <div class="user-avatar-header large">
+                                <div class="avatar-circle" id="dropdownAvatar">
+                                    <span id="dropdownAvatarText">AD</span>
+                                </div>
+                                <span class="admin-badge-header">
+                                    <i class="fas fa-shield-alt"></i>
+                                </span>
+                            </div>
+                            <div class="dropdown-user-info">
+                                <span class="dropdown-user-name" id="dropdownUsername">Admin User</span>
+                                <span class="dropdown-user-email" id="dropdownEmail">admin@breathsafe.com</span>
+                                <span class="dropdown-user-role">
+                                    <i class="fas fa-shield-alt"></i> Administrator
+                                </span>
+                            </div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="admin-profile.html" class="dropdown-item">
+                            <i class="fas fa-user"></i>
+                            <span>My Profile</span>
+                        </a>
+                        <a href="#" class="dropdown-item" id="settingsBtn">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item danger" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <main class="main-content">
+        
+        <!-- Page Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Dashboard Overview</h1>
+                <p class="page-subtitle muted">Real-time air quality monitoring & user management</p>
+            </div>
+            <div class="page-actions">
+                <button class="btn-outline" id="refreshBtn">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>Refresh</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card card">
+                <div class="stat-header">
+                    <div class="stat-icon primary">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <span class="stat-trend positive">
+                        <i class="fas fa-arrow-up"></i> 12%
+                    </span>
+                </div>
+                <div class="stat-body">
+                    <span class="stat-label muted">Total Users</span>
+                    <span class="big-num" id="totalUsers">0</span>
+                </div>
+            </div>
+
+            <div class="stat-card card">
+                <div class="stat-header">
+                    <div class="stat-icon success">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <span class="stat-trend positive">
+                        <i class="fas fa-arrow-up"></i> 8%
+                    </span>
+                </div>
+                <div class="stat-body">
+                    <span class="stat-label muted">Active Users</span>
+                    <span class="big-num" id="activeUsers">0</span>
+                </div>
+            </div>
+
+            <div class="stat-card card">
+                <div class="stat-header">
+                    <div class="stat-icon warning">
+                        <i class="fas fa-user-clock"></i>
+                    </div>
+                    <span class="stat-trend neutral">
+                        <i class="fas fa-minus"></i> 0%
+                    </span>
+                </div>
+                <div class="stat-body">
+                    <span class="stat-label muted">Pending</span>
+                    <span class="big-num" id="pendingUsers">0</span>
+                </div>
+            </div>
+
+            <div class="stat-card card">
+                <div class="stat-header">
+                    <div class="stat-icon" id="statusIcon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <span class="pill status-pill" id="statusPill">Normal</span>
+                </div>
+                <div class="stat-body">
+                    <span class="stat-label muted">Air Quality</span>
+                    <span class="big-num" id="airQualityStatus">Safe</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Grid -->
+        <div class="content-grid">
+            
+            <!-- Left Column -->
+            <div class="left-column">
+                
+                <!-- Air Quality Monitor -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-wind"></i>
+                            Air Quality Monitor
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="orb-container">
+                            <div class="air-orb" id="airOrb">
+                                <div class="orb-ring"></div>
+                                <div class="orb-core">
+                                    <i class="fas fa-wind"></i>
+                                </div>
+                                <div class="orb-glow"></div>
+                            </div>
+                        </div>
+                        <div class="air-status">
+                            <span class="air-status-text" id="airStatusText">Normal</span>
+                            <span class="air-status-desc muted" id="airStatusDesc">Air quality is within safe levels</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Temperature & Humidity Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-thermometer-half"></i>
+                            Environment Monitor
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="environment-grid">
+                            
+                            <!-- Temperature -->
+                            <div class="env-item temperature">
+                                <div class="env-icon">
+                                    <i class="fas fa-temperature-high"></i>
+                                </div>
+                                <div class="env-content">
+                                    <span class="env-label muted">Temperature</span>
+                                    <div class="env-value-wrapper">
+                                        <span class="env-value" id="temperatureValue">0</span>
+                                        <span class="env-unit">°C</span>
+                                    </div>
+                                    <div class="env-bar">
+                                        <div class="env-bar-fill temp-bar" id="tempBar" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Humidity -->
+                            <div class="env-item humidity">
+                                <div class="env-icon">
+                                    <i class="fas fa-tint"></i>
+                                </div>
+                                <div class="env-content">
+                                    <span class="env-label muted">Humidity</span>
+                                    <div class="env-value-wrapper">
+                                        <span class="env-value" id="humidityValue">0</span>
+                                        <span class="env-unit">%</span>
+                                    </div>
+                                    <div class="env-bar">
+                                        <div class="env-bar-fill humidity-bar" id="humidityBar" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sensor Readings -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-microchip"></i>
+                            Sensor Readings
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        
+                        <!-- MQ6 Sensor -->
+                        <div class="sensor-item">
+                            <div class="sensor-header">
+                                <div class="sensor-icon mq6">
+                                    <i class="fas fa-fire"></i>
+                                </div>
+                                <div class="sensor-info">
+                                    <h4>MQ6 Sensor</h4>
+                                    <p class="muted">LPG / Propane</p>
+                                </div>
+                                <div class="sensor-trend" id="mq6Trend">
+                                    <i class="fas fa-minus"></i>
+                                </div>
+                            </div>
+                            <div class="sensor-value-wrapper">
+                                <span class="sensor-value" id="mq6Value">0</span>
+                                <span class="sensor-unit muted">ppm</span>
+                            </div>
+                            <div class="sensor-bar">
+                                <div class="sensor-bar-fill mq6-bar" id="mq6Bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- MQ7 Sensor -->
+                        <div class="sensor-item">
+                            <div class="sensor-header">
+                                <div class="sensor-icon mq7">
+                                    <i class="fas fa-smog"></i>
+                                </div>
+                                <div class="sensor-info">
+                                    <h4>MQ7 Sensor</h4>
+                                    <p class="muted">Carbon Monoxide</p>
+                                </div>
+                                <div class="sensor-trend" id="mq7Trend">
+                                    <i class="fas fa-minus"></i>
+                                </div>
+                            </div>
+                            <div class="sensor-value-wrapper">
+                                <span class="sensor-value" id="mq7Value">0</span>
+                                <span class="sensor-unit muted">ppm</span>
+                            </div>
+                            <div class="sensor-bar">
+                                <div class="sensor-bar-fill mq7-bar" id="mq7Bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Real-time Chart -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-line"></i>
+                            Real-time Monitoring
+                        </h3>
+                        <div class="card-actions">
+                            <button class="icon-btn small" id="pauseChart">
+                                <i class="fas fa-pause"></i>
+                            </button>
+                            <button class="icon-btn small" id="clearChart">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-wrapper">
+                            <canvas id="sensorChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Column -->
+            <div class="right-column">
+                
+                <!-- User Management -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-users-cog"></i>
+                            User Management
+                        </h3>
+                        <div class="card-actions">
+                            <button class="btn-primary" id="addAdminBtn">
+                                <i class="fas fa-user-shield"></i>
+                                <span>Add Admin</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Table Controls -->
+                    <div class="table-controls">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Search users..." id="searchUsers">
+                        </div>
+                        
+                        <div class="filters">
+                            <select id="filterRole" class="filter-select">
+                                <option value="all">All Roles</option>
+                                <option value="admin">🛡️ Admins</option>
+                                <option value="user">Users</option>
+                            </select>
+                            
+                            <select id="filterStatus" class="filter-select">
+                                <option value="all">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="pending">Pending</option>
+                            </select>
+                        </div>
+                        
+                        <div class="table-actions">
+                            <button class="icon-btn" id="toggleTableFocus" title="Table Focus Mode">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                            <button class="icon-btn" id="zoomOutTable" title="Zoom Out Table">
+                                <i class="fas fa-search-minus"></i>
+                            </button>
+                            <button class="icon-btn" id="zoomInTable" title="Zoom In Table">
+                                <i class="fas fa-search-plus"></i>
+                            </button>
+                            <button class="icon-btn" id="exportCsvBtn" title="Export CSV">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="icon-btn danger" id="deleteSelectedBtn" title="Delete Selected">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Users Table -->
+                    <div class="table-wrapper">
+                        <table class="users-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 40px;">
+                                        <input type="checkbox" id="selectAll">
+                                    </th>
+                                    <th>User</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Joined</th>
+                                    <th style="width: 80px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <tr>
+                                    <td colspan="7" class="loading-cell">
+                                        <div class="spinner"></div>
+                                        <span class="muted">Loading users...</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Theme Toggle (Bottom Right) -->
+    <button id="themeToggle" class="theme-toggle">
+        <i class="fas fa-sun"></i>
+    </button>
+
+    <!-- Add Admin Modal -->
+    <div id="addAdminModal" class="modal">
+        <div class="modal-backdrop" id="modalBackdrop"></div>
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-user-shield"></i>
+                    Add New Administrator
+                </h3>
+                <button class="icon-btn" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="addAdminForm">
+                <div class="modal-body">
+                    
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-user"></i>
+                            Username
+                        </label>
+                        <input type="text" id="adminUsername" placeholder="Enter username" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-id-card"></i>
+                                First Name
+                            </label>
+                            <input type="text" id="adminFirstName" placeholder="First name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <input type="text" id="adminLastName" placeholder="Last name" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-envelope"></i>
+                            Email Address
+                        </label>
+                        <input type="email" id="adminEmail" placeholder="admin@example.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-phone"></i>
+                            Phone Number
+                        </label>
+                        <input type="tel" id="adminPhone" placeholder="+1234567890">
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-lock"></i>
+                            Password
+                        </label>
+                        <input type="password" id="adminPassword" placeholder="Enter password" required>
+                    </div>
+
+                    <div class="alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        <span>This user will be created with administrator privileges.</span>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-outline" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-user-shield"></i>
+                        Create Administrator
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- User Details Modal -->
+    <div id="userDetailsModal" class="modal">
+        <div class="modal-backdrop" id="userDetailsBackdrop"></div>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-user-circle"></i>
+                    User Details
+                </h3>
+                <button class="icon-btn" id="closeUserDetailsModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                
+                <!-- User Avatar -->
+                <div class="user-details-avatar-section">
+                    <div class="user-details-avatar">
+                        <div class="avatar-circle-large" id="userDetailsAvatar">
+                            <span id="userDetailsInitials">JD</span>
+                        </div>
+                        <span class="user-details-badge" id="userDetailsBadge"></span>
+                    </div>
+                    <div class="user-details-name-section">
+                        <h4 id="userDetailsName">John Doe</h4>
+                        <p class="muted" id="userDetailsEmail">john@example.com</p>
+                    </div>
+                </div>
+
+                <!-- User Info Grid -->
+                <div class="user-details-grid">
+                    
+                    <div class="detail-item">
+                        <label><i class="fas fa-user"></i> Username</label>
+                        <span id="detailUsername">-</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <label><i class="fas fa-id-card"></i> First Name</label>
+                        <span id="detailFirstName">-</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <label><i class="fas fa-id-card"></i> Last Name</label>
+                        <span id="detailLastName">-</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <label><i class="fas fa-envelope"></i> Email</label>
+                        <span id="detailEmail">-</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <label><i class="fas fa-phone"></i> Phone Number</label>
+                        <span id="detailPhone">-</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <label><i class="fas fa-shield-alt"></i> Role</label>
+                        <span id="detailRole">-</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <label><i class="fas fa-circle"></i> Status</label>
+                        <span id="detailStatus">-</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <label><i class="fas fa-calendar"></i> Created At</label>
+                        <span id="detailCreatedAt">-</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <label><i class="fas fa-calendar-check"></i> Activated At</label>
+                        <span id="detailActivatedAt">-</span>
+                    </div>
+
+                    <!-- API Token Section -->
+                    <div class="detail-item full-width">
+                        <label>
+                            <i class="fas fa-key"></i> API Token
+                            <button class="copy-btn" id="copyTokenBtn" type="button" title="Copy to clipboard">
+                                <i class="fas fa-copy"></i>
+                                Copy
+                            </button>
+                        </label>
+                        <code class="api-token" id="detailApiToken">-</code>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-outline" id="closeUserDetailsBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteConfirmModal" class="modal">
+        <div class="modal-backdrop" id="deleteBackdrop"></div>
+        <div class="modal-dialog modal-sm">
+            <div class="modal-header">
+                <h3 class="modal-title danger-title">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Confirm Deletion
+                </h3>
+                <button class="icon-btn" id="closeDeleteModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="alert-danger">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <div>
+                        <strong>Are you sure?</strong>
+                        <p>You are about to delete <strong id="deleteCount">0</strong> user(s). This action cannot be undone.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-outline" id="cancelDeleteBtn">Cancel</button>
+                <button type="button" class="btn-danger" id="confirmDeleteBtn">
+                    <i class="fas fa-trash-alt"></i>
+                    <span>Delete Users</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    
+    <!-- Dashboard Scripts -->
+    <script src="admin-dashboard-core.js"></script>
+    <script src="admin-dashboard-sensors.js"></script>
+    <script src="admin-dashboard-features.js"></script>
+    
+    <script>
+    // Initialize Dashboard
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('🚀 BreathSafe Dashboard Initializing...');
+        
+        // Initialize core functionality
+        if (typeof initCore === 'function') {
+            initCore();
+            console.log('✅ Core initialized');
+        }
+        
+        // Initialize sensors
+        if (typeof initSensors === 'function') {
+            initSensors();
+            console.log('✅ Sensors initialized');
+        }
+        
+        // Modal management
+        const modals = document.querySelectorAll('.modal');
+        
+        modals.forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal || e.target.classList.contains('modal-backdrop')) {
+                    modal.classList.remove('active');
+                    document.body.classList.remove('modal-open');
+                }
+            });
+            
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.attributeName === 'class') {
+                        if (modal.classList.contains('active')) {
+                            document.body.classList.add('modal-open');
+                        } else {
+                            document.body.classList.remove('modal-open');
+                        }
+                    }
+                });
+            });
+            
+            observer.observe(modal, { attributes: true });
+        });
+        
+        console.log('✅ BreathSafe Dashboard Ready');
+    });
+    </script>
+</body>
+</html>

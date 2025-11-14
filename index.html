@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BreathSafe - Sign In</title>
+
+    <!-- Dashboard Base CSS -->
+    <link rel="stylesheet" href="admin-dashboard-base.css">
+    <!-- Modern Login Styles -->
+
+    <link rel="stylesheet" href="breathsafe-login.css">
+
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --primary-light: #34d399;
+            --text: #1f2937;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --panel: #ffffff;
+            --accent-bg: #f3f4f6;
+            --border: #e5e7eb;
+            --hover: #f0fdf4;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        body.dark {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --primary-light: #34d399;
+            --text: #f3f4f6;
+            --text-secondary: #d1d5db;
+            --text-muted: #9ca3af;
+            --panel: #151b28;
+            --accent-bg: #1f2937;
+            --border: #374151;
+            --hover: #064e3b;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --danger: #fca5a5;
+            --warning: #fcd34d;
+        }
+
+        .input-char-feedback {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Auto-fill indicator */
+        .auto-filled-indicator {
+            display: none;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-top: 8px;
+            padding: 8px 12px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 8px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .auto-filled-indicator.active {
+            display: block;
+        }
+
+        .auto-filled-indicator i {
+            margin-right: 6px;
+        }
+
+        /* ========== LOCKOUT TIMER ========== */
+        .lockout-timer {
+            display: none;
+            text-align: center;
+            padding: 24px;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.05));
+            border: 2px solid rgba(239, 68, 68, 0.3);
+            border-radius: 16px;
+            margin-top: 20px;
+            animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .lockout-timer.active {
+            display: block;
+        }
+
+        .lockout-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.25);
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .lockout-icon i {
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .lockout-countdown {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--danger);
+            margin: 12px 0;
+            font-family: 'Monaco', 'Courier New', monospace;
+            text-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+        }
+
+        .lockout-text {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .lockout-message {
+            margin-top: 12px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .lockout-message i {
+            color: var(--danger);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .lockout-timer {
+                padding: 20px;
+            }
+
+            .lockout-countdown {
+                font-size: 2rem;
+            }
+
+            .lockout-icon {
+                width: 50px;
+                height: 50px;
+            }
+
+            .lockout-icon i {
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body class="light">
+    
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+        </div>
+    </div>
+
+    <!-- Login Container -->
+    <div class="login-container">
+        
+        <!-- Glass Card -->
+        <div class="login-card glass-card">
+            
+            <!-- Logo with Animation -->
+            <div class="login-logo">
+                <div class="logo-icon-wrapper">
+                    <div class="logo-icon">
+                        <i class="fas fa-wind"></i>
+                    </div>
+                    <div class="logo-pulse"></div>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-title">BreathSafe</span>
+                    <span class="logo-subtitle">Gas Leak Detection</span>
+                </div>
+            </div>
+
+            <!-- Header -->
+            <div class="login-header">
+                <h1 class="page-title">Welcome</h1>
+                <p class="page-subtitle">Sign in to your account</p>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="login-form">
+                
+                <!-- Username or API Token -->
+                <div class="form-group">
+                    <label class="modern-label">
+                        <i class="fas fa-user"></i>
+                        <span>Username or API Token</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            id="userInput" 
+                            class="modern-input"
+                            placeholder="Enter username or API token" 
+                            required
+                            autocomplete="username"
+                            maxlength="50"
+                        >
+                        <div class="input-border"></div>
+                        <div class="input-indicator" id="inputIndicator">
+                            <i class="fas fa-circle-notch fa-spin"></i>
+                        </div>
+                    </div>
+                    <small class="form-hint" id="inputHint">
+                        <i class="fas fa-info-circle"></i>
+                        Enter your username or API token to continue
+                    </small>
+                    <div class="auto-filled-indicator" id="autoFilledIndicator">
+                        <i class="fas fa-check-circle"></i>
+                        <span id="autoFilledText">Admin token auto-filled from previous login</span>
+                    </div>
+                </div>
+
+                <!-- Login Button -->
+                <button type="submit" class="modern-btn btn-primary" id="loginBtn">
+                    <span class="btn-content">
+                        <span class="btn-icon">
+                            <i class="fas fa-sign-in-alt"></i>
+                        </span>
+                        <span class="btn-text">Sign In</span>
+                    </span>
+                    <span class="btn-loading" style="display: none;">
+                        <span class="loading-spinner"></span>
+                        <span>Verifying...</span>
+                    </span>
+                    <div class="btn-ripple"></div>
+                </button>
+
+                <!-- Lockout Timer -->
+                <div class="lockout-timer" id="lockoutTimer">
+                    <div class="lockout-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="lockout-text">Account Temporarily Locked</div>
+                    <div class="lockout-countdown" id="lockoutCountdown">15:00</div>
+                    <div class="lockout-message">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Too many failed login attempts</span>
+                    </div>
+                </div>
+
+                <!-- Divider -->
+                <div class="divider">
+                    <span>Need help?</span>
+                </div>
+
+                <!-- Action Links -->
+                <div class="action-links">
+                    <a href="forgot-password.html" class="action-link">
+                        <i class="fas fa-key"></i>
+                        <span>Forgot Credentials</span>
+                    </a>
+                    <a href="signup.html" class="action-link primary">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Create Account</span>
+                    </a>
+                </div>
+            </form>
+
+            <!-- Message -->
+            <div id="message" class="modern-message"></div>
+
+            <!-- Footer -->
+            <div class="login-footer">
+                <p class="security-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    Secure Login
+                </p>
+            </div>
+
+        </div>
+
+        <!-- Decorative Elements -->
+        <div class="decorative-elements">
+            <div class="deco-circle circle-1"></div>
+            <div class="deco-circle circle-2"></div>
+        </div>
+
+    </div>
+
+    <!-- Theme Toggle -->
+    <button id="themeToggle" class="modern-theme-toggle">
+        <span class="toggle-icon">
+            <i class="fas fa-sun"></i>
+        </span>
+    </button>
+
+    <!-- Firebase SDK v8 -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    
+    <!-- Login Script -->
+    <script src="breathsafe-login.js"></script>
+
+</body>
+</html>
