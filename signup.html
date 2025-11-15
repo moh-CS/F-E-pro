@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - BreathSafe</title>
+    
+    <!-- Dashboard Base CSS -->
+    <link rel="stylesheet" href="admin-dashboard-base.css">
+    
+    <!-- Modern Login Styles (Reuse) -->
+    <link rel="stylesheet" href="breathsafe-login.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+   
+    <style>
+        /* ========== ROOT VARIABLES (LIGHT MODE) ========== */
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --primary-light: #34d399;
+            --text: #1f2937;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --panel: #ffffff;
+            --accent-bg: #f3f4f6;
+            --border: #e5e7eb;
+            --hover: #f0fdf4;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        /* ========== DARK MODE VARIABLES ========== */
+        body.dark {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --primary-light: #34d399;
+            --text: #f3f4f6;
+            --text-secondary: #d1d5db;
+            --text-muted: #9ca3af;
+            --panel: #151b28;
+            --accent-bg: #1f2937;
+            --border: #374151;
+            --hover: #064e3b;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --danger: #fca5a5;
+            --warning: #fcd34d;
+        }
+
+        /* Additional styles for signup page */
+        .glass-card {
+            max-width: 580px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        
+        .phone-input-wrapper {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .phone-prefix {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            background: var(--accent-bg);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            font-weight: 600;
+            color: var(--text);
+            font-size: 0.9375rem;
+            white-space: nowrap;
+        }
+        
+        .phone-input-wrapper .input-wrapper {
+            flex: 1;
+        }
+        
+        /* Character counter */
+        .char-counter {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            text-align: right;
+        }
+        
+        .char-counter.warning {
+            color: var(--warning);
+            font-weight: 600;
+        }
+        
+        .char-counter.danger {
+            color: var(--danger);
+            font-weight: 600;
+        }
+        
+        .strength-meter {
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        
+        .strength-meter-fill {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s;
+            border-radius: 2px;
+        }
+        
+        .strength-meter-fill.weak {
+            width: 33%;
+            background: var(--danger);
+        }
+        
+        .strength-meter-fill.medium {
+            width: 66%;
+            background: var(--warning);
+        }
+        
+        .strength-meter-fill.strong {
+            width: 100%;
+            background: var(--primary);
+        }
+        
+        .validation-feedback {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8125rem;
+            margin-top: 8px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: var(--accent-bg);
+        }
+        
+        .validation-feedback.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary);
+        }
+        
+        .validation-feedback.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        /* ========== USERNAME ALTERNATIVES STYLING ========== */
+        .username-alternatives {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .username-alternatives small {
+            grid-column: 1 / -1;
+        }
+
+        /* ========== PHONE SUGGESTIONS STYLING ========== */
+        #phoneSuggestions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        #phoneSuggestions small {
+            grid-column: 1 / -1;
+        }
+
+        /* Action links override for consistency */
+        .action-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 16px;
+            border-radius: 12px;
+            background: var(--accent-bg);
+            border: 2px solid var(--border);
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .action-link i {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            transition: all 0.3s;
+        }
+
+        .action-link:hover {
+            transform: translateY(-3px);
+            background: var(--hover);
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .action-link:hover i {
+            color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .action-link.primary {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .action-link.primary i {
+            color: var(--primary);
+        }
+
+        .action-link.primary:hover {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.08));
+            border-color: var(--primary);
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .username-alternatives {
+                grid-template-columns: 1fr;
+            }
+
+            #phoneSuggestions {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ========== SHAKE ERROR ANIMATION ========== */
+@keyframes shake-error {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+    20%, 40%, 60%, 80% { transform: translateX(8px); }
+}
+
+.shake-error {
+    animation: shake-error 0.5s ease-in-out;
+    border-color: var(--danger) !important;
+}
+
+/* ========== ENHANCED USERNAME ALTERNATIVES ========== */
+.username-alternatives-container {
+    margin-top: 20px;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(16, 185, 129, 0.02));
+    border: 2px solid rgba(16, 185, 129, 0.2);
+    border-radius: 16px;
+    animation: slideInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.alternatives-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.alternatives-header i {
+    font-size: 1.1rem;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.alternatives-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+}
+
+.alternative-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+    overflow: hidden;
+    animation: slideInLeft 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.alternative-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.alternative-btn:hover::before {
+    left: 100%;
+}
+
+.alternative-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35);
+}
+
+.alternative-btn:active {
+    transform: translateY(-1px) scale(0.98);
+}
+
+.alt-text {
+    flex: 1;
+    text-align: center;
+}
+
+.alt-arrow {
+    opacity: 0;
+    transform: translateX(-5px);
+    transition: all 0.3s;
+}
+
+.alternative-btn:hover .alt-arrow {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.alternative-btn.selected {
+    background: linear-gradient(135deg, #059669, #047857);
+    animation: successPulse 0.4s ease;
+}
+
+/* ========== ENHANCED PHONE SUGGESTIONS ========== */
+.phone-suggestions-container {
+    margin-top: 20px;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(59, 130, 246, 0.02));
+    border: 2px solid rgba(59, 130, 246, 0.2);
+    border-radius: 16px;
+    animation: slideInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.suggestions-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--info);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.suggestions-header i {
+    font-size: 1.1rem;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.suggestions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+}
+
+.suggestion-btn {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.05));
+    border: 2px solid rgba(59, 130, 246, 0.3);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: slideInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    overflow: hidden;
+}
+
+.suggestion-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.suggestion-btn:hover::before {
+    left: 100%;
+}
+
+.suggestion-btn:hover {
+    transform: translateY(-3px);
+    border-color: var(--info);
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.25);
+}
+
+.suggestion-operator {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--info);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.suggestion-number {
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.suggestion-arrow {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%) translateX(-5px);
+    opacity: 0;
+    color: var(--info);
+    transition: all 0.3s;
+}
+
+.suggestion-btn:hover .suggestion-arrow {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+}
+
+.suggestion-btn.selected {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1));
+    border-color: var(--primary);
+    animation: successPulse 0.4s ease;
+}
+
+/* ========== ANIMATIONS ========== */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes successPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+    .alternatives-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .suggestions-grid {
+        grid-template-columns: 1fr;
+    }
+}
+    </style>
+</head>
+<body class="light">
+    
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+        </div>
+    </div> 
+
+    <!-- Container -->
+    <div class="login-container">
+        
+        <!-- Glass Card -->
+        <div class="login-card glass-card">
+            
+            <!-- Logo -->
+            <div class="login-logo">
+                <div class="logo-icon-wrapper">
+                    <div class="logo-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div class="logo-pulse"></div>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-title">BreathSafe</span>
+                    <span class="logo-subtitle">Create Account</span>
+                </div>
+            </div>
+
+            <!-- Header -->
+            <div class="login-header">
+                <h1 class="page-title">Sign Up</h1>
+                <p class="page-subtitle">Join BreathSafe for gas leak monitoring</p>
+            </div>
+
+            <!-- Form -->
+            <form id="signupForm" class="login-form">
+                
+                <!-- Username -->
+                <div class="form-group">
+                    <label class="modern-label">
+                        <i class="fas fa-user"></i>
+                        <span>Username</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            id="username" 
+                            class="modern-input"
+                            placeholder="Choose a unique username" 
+                            required
+                            autocomplete="username"
+                            minlength="3"
+                            maxlength="12"
+                            inputmode="text"
+                        >
+                        <div class="input-border"></div>
+                        <div class="input-indicator" id="usernameIndicator"></div>
+                    </div>
+                    <div class="char-counter" id="usernameCounter">0 / 12</div>
+                   <small class="form-hint" id="usernameHint">
+    <i class="fas fa-info-circle"></i>
+    3-12 characters (letters, numbers, _, #, $ only - no spaces)
+</small>
+                </div>
+
+                <!-- First Name & Last Name -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="modern-label">
+                            <i class="fas fa-id-card"></i>
+                            <span>First Name</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="text" 
+                                id="firstName" 
+                                class="modern-input"
+                                placeholder="First name" 
+                                required
+                                autocomplete="given-name"
+                                maxlength="30"
+                            >
+                            <div class="input-border"></div>
+                        </div>
+                        <small class="form-hint">
+                            <i class="fas fa-info-circle"></i>
+                            Required field
+                        </small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="modern-label">
+                            <span>Last Name</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="text" 
+                                id="lastName" 
+                                class="modern-input"
+                                placeholder="Last name" 
+                                required
+                                autocomplete="family-name"
+                                maxlength="30"
+                            >
+                            <div class="input-border"></div>
+                        </div>
+                        <small class="form-hint">
+                            <i class="fas fa-info-circle"></i>
+                            Required field
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label class="modern-label">
+                        <i class="fas fa-envelope"></i>
+                        <span>Email Address</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="email" 
+                            id="email" 
+                            class="modern-input"
+                            placeholder="yourname@gmail.com" 
+                            required
+                            autocomplete="email"
+                            maxlength="50"
+                            pattern="[a-zA-Z0-9._%-]+@gmail\.com"
+                        >
+                        <div class="input-border"></div>
+                        <div class="input-indicator" id="emailIndicator"></div>
+                    </div>
+                    <small class="form-hint" id="emailHint">
+                        <i class="fas fa-info-circle"></i>
+                        Gmail address only (e.g., yourname@gmail.com)
+                    </small>
+                </div>
+
+                <!-- Phone Number -->
+                <div class="form-group">
+                    <label class="modern-label">
+                        <i class="fas fa-phone"></i>
+                        <span>Phone Number</span>
+                    </label>
+                    <div class="phone-input-wrapper">
+                        <div class="phone-prefix">+962</div>
+                        <div class="input-wrapper">
+                            <input 
+                                type="text" 
+                                id="phoneNumber" 
+                                class="modern-input"
+                                placeholder="7XXXXXXXX" 
+                                required
+                                autocomplete="tel"
+                                inputmode="numeric"
+                                maxlength="9"
+                            >
+                            <div class="input-border"></div>
+                            <div class="input-indicator" id="phoneIndicator"></div>
+                        </div>
+                    </div>
+                    <div class="char-counter" id="phoneCounter">0 / 9</div>
+                    <small class="form-hint" id="phoneHint">
+                        <i class="fas fa-info-circle"></i>
+                        Enter 9 digits starting with 077, 078, or 079
+                    </small>
+                    <div class="validation-feedback" id="phoneOperator" style="display: none;"></div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="modern-btn btn-primary" id="signupBtn">
+                    <span class="btn-content">
+                        <span class="btn-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </span>
+                        <span class="btn-text">Create Account</span>
+                    </span>
+                    <span class="btn-loading" style="display: none;">
+                        <span class="loading-spinner"></span>
+                        <span>Creating...</span>
+                    </span>
+                    <div class="btn-ripple"></div>
+                </button>
+
+                <!-- Divider -->
+                <div class="divider">
+                    <span>or</span>
+                </div>
+
+                <!-- Back Button -->
+                <button type="button" class="modern-btn btn-outline" onclick="location.href='index.html'">
+                    <span class="btn-content">
+                        <span class="btn-icon">
+                            <i class="fas fa-arrow-left"></i>
+                        </span>
+                        <span class="btn-text">Back to Login</span>
+                    </span>
+                </button>
+            </form>
+
+            <!-- Message -->
+            <div id="message" class="modern-message"></div>
+
+            <!-- Footer -->
+            <div class="login-footer">
+                <p class="admin-link">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Already have an account? <a href="index.html">Sign in</a>
+                </p>
+            </div>
+
+        </div>
+
+        <!-- Decorative Elements -->
+        <div class="decorative-elements">
+            <div class="deco-circle circle-1"></div>
+            <div class="deco-circle circle-2"></div>
+        </div>
+
+    </div>
+
+    <!-- Theme Toggle -->
+    <button id="themeToggle" class="modern-theme-toggle">
+        <span class="toggle-icon">
+            <i class="fas fa-sun"></i>
+        </span>
+    </button>
+
+    <!-- Firebase SDK v8 -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    
+    <!-- Signup Script -->
+    <script src="signup.js"></script>
+
+</body>
+</html>
